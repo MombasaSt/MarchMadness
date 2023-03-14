@@ -9,6 +9,70 @@ Raw file header definitions:
   
 **Conf** - The conference the team played in that season
 
+1: ACC
+  
+2: America East
+
+3: American
+
+4: Atlantic 10
+
+5: Atlantic Sun
+
+6: Big 12
+
+7: Big East
+
+8: Big Sky
+
+9: Big South
+
+10: Big Ten
+
+11: Big West
+
+12: CAA
+
+13: C-USA
+
+14: Horizon
+
+15: Ivy League
+
+16: MAAC
+
+17: MAC
+
+18: MEAC
+
+19: Missouri Valley
+
+20: Mountain West
+
+21: Northeast
+
+22: Ohio Valley
+
+23: Pac-12 (formerly Pac-10)
+
+24: Patriot
+
+25: SEC
+
+26: Southern
+
+27: Southland
+
+28: Summit (formerly Mid-Continent)
+
+29: Sun Belt
+
+30: SWAC
+
+31: WAC
+
+32: West Coast
+
 **W** - Games the team won before the tournament
 
 **L** - Games the team lost before the tournament
