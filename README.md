@@ -40,6 +40,9 @@ Raw file header definitions:
 **R64-Opp-Seed** - The seed the team played in the Round of 64. This will always be the absolute value of Seed-17
 
 **R64-Res** - The result of the team playing in the Round of 64.
+
   W: Win
+  
   L: Loss
+  
   This is the target variable.
