@@ -93,8 +93,8 @@ Raw file header definitions:
 
 **R64Res** - The result of the team playing in the Round of 64.
 
-  W: Win
+  1: Win
   
-  L: Loss
+  0: Loss
   
   This is the target variable.
