@@ -3,7 +3,7 @@ Raw file header definitions:
 **YearTeam** - The season the team played in & the university's D1 college basketball team participating in the tournament
 
 **Seed** - The seed given to the team by the panel that created the season's bracket. There are 4 regions in the bracket that each have 16 seeds.
-  *Note: While there have been 1-4 play-in games since 2001, these play-in games are ignore for this exercise, as the seeds that are in the play-in games has changed by year, and do not affect the round of 64/going forward.*
+  *Note: While there have been 1-4 play-in games since 2001, these play-in games are ignored for this exercise, as the seeds that are in the play-in games has changed by year, and do not affect the round of 64/going forward.*
   
 **Conf** - The conference the team played in that season
 
@@ -71,10 +71,16 @@ Raw file header definitions:
 
 32: West Coast
 
-**W** - Games the team won before the tournament
+**G** - Games the team played
 
-**L** - Games the team lost before the tournament
+**W-L%** - Win-loss percentage for the team; calculated as W/(W+L)
 
+**ConfW-L%** - Record in conference play
+  
+**HomeW-L%** - Record when playing at home
+    
+**AwayW-L%** - Record when playing away from home (not at a neutral site)
+ 
 **AdjEM** - Adjusted efficiency margin - a team's AdjO-AdjD
 
 **AdjO** - Adjusted offensive efficiency – An estimate of the offensive efficiency (points scored per 100 possessions) a team would have against the average D-I defense.
@@ -88,8 +94,6 @@ Raw file header definitions:
 **SOSAdjEM**, **SOSOppO**, **SOSOppD** - The total efficiency of the opponents that the team played on the year, where better/higher is a more difficult schedule; the statistics are the reflected versions of the team's adjusted statistics (SOS = "strength of schedule")
 
 **NCSOSAdjEM** - Same as above, but only for the non-conference strength of schedule
-
-**R64OppSeed** - The seed the team played in the Round of 64. This will always be the absolute value of Seed-17
 
 **R64Res** - The result of the team playing in the Round of 64.
 
