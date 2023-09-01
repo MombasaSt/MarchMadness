@@ -113,7 +113,7 @@ Presented below are all the base statistics in the table. Suffixed statistics ar
 
 **AdjT** - Adjusted Tempo; possessions per 40 minutes, adjusted per opponent
 
-**Luck** - Luck rating; the measure of deviation between a team's actual winning percentage and what would be expected from game-by-game efficiencies. A team in many close games won't win all of them, and vice versa.
+**Luck** - Luck rating; the measure of deviation between a team's actual winning percentage and what would be expected from game-by-game efficiencies. A team in many close games won't win all of them, and vice versa
 
 **SOSAdjEM** - Adjusted Efficiency Margin for strength of schedule; the same as AdjEM, but for the opponents the team faced, which is effectively a strength of schedule rating
 
