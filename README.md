@@ -29,10 +29,8 @@ Presented below are all the base statistics in the table. Suffixed statistics ar
 
 (A better in-depth explanation of the adjusted stats can be found here: https://www.onthebanks.com/2019/12/9/21002735/kenpom-rankings-explained-how-to-better-evaluate-rutgers-basketball-big-ten-ncaa-steve-pikiell)
 
-**Year** - The season the team played in.  
+**Team** - The college's basketball team being analyzed (based on the year in which they played)
   *Note: If the season being played was 2013-2014, the year present is 2014. This follows traditional statistical conventions used in sports analytics for sports that include a season that runs between years.*
-
-**College** - The college's basketball team being analyzed
   
 **Seed** - The seed given to the team by the panel that created the season's bracket. There are 4 regions in the bracket that each have 16 seeds.  
   *Note: While there have been 1-4 play-in games since 2001, these play-in games are ignored for this exercise, as the seeds that are in the play-in games has changed by year, and do not affect the round of 64/going forward.*
