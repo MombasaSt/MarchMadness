@@ -5,6 +5,7 @@ The raw file *History-MM-Raw.csv* in this depository lists numerous team, singul
 All traditional and advanced statistics (from the leftmost column to "Pace") in the file are from Sports Reference - College Basketball, run by Sports Reference LLC; all adjusted statistics (from "AdjEM" to "NCSOSAdjEM_Diff") are from KenPom, run by Ken Pomeroy. The last column is the readily-available statistic of whether the team won their first round matchup or not.
 
 Sports Reference - College Basketball: https://www.sports-reference.com/cbb/postseason/
+
 KenPom: https://kenpom.com/
 
 ## Statistics: Suffixes
