@@ -17,7 +17,7 @@ Preceding this section are the definitions for each of the "base" columns/statis
 **Suffix of _R64Opp** - This is the corresponding base statistic for the opponent of the team assigned to the current row.  
 *Ex: In the first row of data, for column **PPG_R64Opp**, or **Points Per Game by Round of 64 Opponent**, this is the amount of points per game Wichita State scored on average, which was 75.17.*
 
-**Suffix of _SznOpp** - This is the corresponding base statistic for all the opponents the team assigned to the current row faced.  
+**Suffix of _SznOpp** - This is the corresponding base statistic for all the opponents the team assigned to the current row faced during the regular season. 
 *Ex: In the first row of data, for column **PPG_SznOpp**, or **Points Per Game by Season Opponents**, this is the amount of points per game Cal Poly allowed to their opponents, which was 63.62.*  
 *Note: WLP and KenPom statistics do not have SznOpp equivalents.*
 
