@@ -1,6 +1,6 @@
 ## Dataset Description
 
-The raw file *History-MM-Raw.csv* in this depository lists numerous team, singular-opponent, season-opponent, and differential statistics for every team that has played in the Round of 64 of the NCAA Men's Division I College Basketball Tournament, colloquially known as "March Madness", from 2010 to 2022. Years prior are left out due to the tournament having a different format beforehand and missing advanced data for that time period, while 2023 is not included due to the recency of the data compared to the project's beginning.
+The raw file *HistoryMMRaw.csv* in this depository lists numerous team, singular-opponent, season-opponent, and differential statistics for every team that has played in the Round of 64 of the NCAA Men's Division I College Basketball Tournament, colloquially known as "March Madness", from 2010 to 2022. Years prior are left out due to the tournament having a different format beforehand and missing advanced data for that time period, while 2023 is not included due to the recency of the data compared to the project's beginning.
 
 All traditional and advanced statistics (from the leftmost column to "Pace") in the file are from Sports Reference - College Basketball, run by Sports Reference LLC; all adjusted statistics (from "AdjEM" to "NCSOSAdjEM_Diff") are from KenPom, run by Ken Pomeroy. The last column is the readily-available statistic of whether the team won their first round matchup or not.
 
