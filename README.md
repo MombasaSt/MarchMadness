@@ -19,12 +19,14 @@ Preceding this section are the definitions for each of the "base" columns/statis
 
 **Suffix of _SznOpp** - This is the corresponding base statistic for all the opponents the team assigned to the current row faced.  
 *Ex: In the first row of data, for column **PPG_SznOpp**, or **Points Per Game by Season Opponents**, this is the amount of points per game Cal Poly allowed to their opponents, which was 63.62.*
+*Note: WLP and KenPom statistics do not have SznOpp equivalents.*
 
 **Suffix of _Diff_R64Opp** - This is the difference between the base statistic and the Round of 64 opponent's base statistic.  
 *Ex: In the first row of data, for column **PPG_Diff_R64Opp**, or **Difference in Points Per Game from Round of 64 Opponent**, this is the difference between Cal Poly and Wichita State's PPG, which is -12.2 (62.97-75.17).*
 
 **Suffix of _Diff_SznOpp** - This is the difference between the base statistic and the season opponents' base statistic.  
 *Ex: In the first row of data, for column **PPG_Diff_SznOpp**, or **Difference in Points Per Game from Season Opponents**, this is the difference between Cal Poly and their season opponents' PPG, which is -0.65 (62.97-63.62).*
+*Note: WLP and KenPom statistics do not have SznOpp equivalents, so they do not have SznOpp differences.*
 
 ## Statistics: Base Statistics
 
