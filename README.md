@@ -112,7 +112,7 @@ Presented below are all the base statistics in the table. Suffixed statistics ar
 
 **AdjO** - Adjusted Offensive Efficiency; the amount of points a team would score per 100 possessions against an average Division I opponent
 
-**AdjD** - Adjusted Defensive Efficiency; the amount of points a team would allow per 100 possessions against an average Division I opponent
+**AdjD** - Adjusted Defensive Efficiency; the amount of points a team would allow per 100 possessions against an average Division I opponent. Note that a lower number is better for this statistic.
 
 **AdjT** - Adjusted Tempo; possessions per 40 minutes, adjusted per opponent
 
@@ -120,9 +120,9 @@ Presented below are all the base statistics in the table. Suffixed statistics ar
 
 **SOSAdjEM** - Adjusted Efficiency Margin for strength of schedule; the same as AdjEM, but for the opponents the team faced, which is effectively a strength of schedule rating
 
-**SOSOppO** - Adjusted Offensive Efficiency for strength of schedule; the same as AdjO, but for the opponents the team faced, which is effectively an offensive strength of schedule rating
+**SOSOppO** - Adjusted Offensive Efficiency for strength of schedule; the same as AdjO, but for the opponents the team faced, which is effectively an offensive strength of schedule rating.
 
-**SOSOppD** - Adjusted Defensive Efficiency for strength of schedule; the same as AdjD, but for the opponents the team faced, which is effectively a defensive strength of schedule rating
+**SOSOppD** - Adjusted Defensive Efficiency for strength of schedule; the same as AdjD, but for the opponents the team faced, which is effectively a defensive strength of schedule rating.  Note that a lower number is better for this statistic.
 
 **NCSOSAdjEM** - Adjusted Efficiency Margin for non-conference strength of schedule; the same as SOSAdjEM but for teams not in the same conference
 
