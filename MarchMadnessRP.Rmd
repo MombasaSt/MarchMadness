@@ -1,0 +1,705 @@
+
+
+```{r setup, include=FALSE, echo = FALSE}
+# installing/setting up necessary packages
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(sjstats)) install.packages("sjstats", repos = "http://cran.us.r-project.org")
+library(dslabs)
+library(dplyr)
+library(tidyr)
+library(yarrr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{css style settings, echo = FALSE}
+blockquote {
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 13px;
+    border-left: 5px solid #eee;
+    font-family: Georgia, "Times New Roman", serif;
+}
+```
+
+<center> <h1><b>How Mad is March Madness?</b></h1>
+
+Lance Bowman\
+Dr. Holland, advisor\
+MATH 4404 Senior Project
+
+<h3><b>ABSTRACT</b></h3> </center>
+
+<font size="2">ABSTRACT GOES HERE</font><br><br>
+
+<h4><b>1. INTRODUCTION</b></h4>
+
+Eventual National Basketball Hall of Fame member Henry V. Porter wrote in the *Illinois High School Athlete magazine* in 1939 about the new college basketball postseason tournament, "A little March madness may complement and contribute to sanity and help keep society on an even keel". Although it took 43 years before long-time CBS broadcaster Brent Musberger used the phrase to describe the tournament himself, "March Madness" has effectively entered the English lexicon to now describe the volatility of the NCAA Men's Division I College Basketball Tournament [1].
+
+The popularity of the phrase "March Madness" has grown over time almost as much as the tournament itself. Since 2013, the average amount of TV viewers per March Madness game has passed 10 million almost every year, with the lowest average viewership in that time span falling in 2016 (9.4 million), a tournament that ended with what is generally considered one of the best championship games in NCAA Tournament history anyway [2][3]. This is alongside a tournament that uniquely boasts 68 teams that receive a bid to play, which is reduced to 64 after 4 preliminary ("play-in") games. Due to the tournament being single-elimination, we can deduce that there are 63 games all told from that 64-team set, making that aforementioned viewership is all the more impressive.<br>
+
+<font size="1"><b>Table 1.</b> NCAA March Madness basketball tournament average TV viewership from 2013 to 2023, in millions.<br>Image courtesy Statista.</font><br>
+![](images/Table1_Viewership.png){width=70%}\
+<br>
+While so many teams results in so many games, so many games results in so many possibilities, and so many possibilities results in so many predictions. With us as humans having an innate pension to correctly predict anything - whether it be the weather or the lottery - predicting the March Madness bracket is music to sports fans' ears; furthermore, the innate desire to win, or to just have fun, can fuel people just as much, leading to the phenomenon that is *bracketology*, the term for both predicting the field of participants in the tournament as well as the winners of said tournament.
+
+Filling out a bracket come March has become something of a staple, with ESPN claiming that over 20 million brackets were filled out on its service before the start of 2023's tournament, with the peak period of entries seeing as many as 26,000 brackets entered per minute -- and that's without including other bracket entry providers such as CBS, Yahoo, or the NCAA themselves [4]. I myself have been part of bracket competitions in the classroom, the workplace, and at church that were all completely on paper, which is unable to be tracked and further boosting the real total. As if the desire to predict, win, and have fun wasn't enough, in 2014, Warren Buffett, the chairman and CEO of Berkshire-Hathaway and seventh-richest person in the world, promised \$1B to anyone who could correctly predict a March Madness bracket; the offer was reduced to \$1M per year for life in 2017 and still stands today [5].
+
+With what is a large proportion of the United States filling out a bracket on an annual basis, how has there not been a perfect one to date? The answer is much more complicated: with those aforementioned predictions comes the probability that someone can be correct, and that is where the difficulty springs to life.<br><br>
+
+<h4><b>2. BRACKET AND ODDS</b></h4>
+
+The bracket for March Madness has been formatted the same way since 2010. 68 teams are selected to participate in the tournament, with the winner of each conference receiving an automatic bid, while any additional teams are selected by a committee as an "at-large" bid based on their quality of play throughout the season; this committee is compiled with athletic directors and commissioners across the nation. All teams are then assigned a "seed" from 1 to 16, where the 1 seeds are the best college basketball teams in the nation and the 16 seeds are the worst to qualify. The committee then determines who they will play in the tournament; traditionally, a 1 seed plays a 16 seed, a 2 seed plays a 15 seed, and so on, with 4 teams receiving each seed number. Seeds 11 and 16 are exceptions, as they have 6 teams that receive them.
+
+The field of teams is then divided into 4 groups of 17, with each group now a "region" in the tournament. As previously mentioned, there are 32 games in the first round - 8 games per region - but 68 teams; this is because each region has a previously-stated play-in game, with two regions being selected to have a play-in game between additional 11 seeds, and the other two regions having the same play-in games for their 16 seeds. The winners of these play-in games, known as the "First Four", compete in the first round, known as the "Round of 64", with all the other initial pairings. Thereafter, the winners play in the "Round of 32", followed by the "Sweet Sixteen", the "Elite Eight", the "Final Four", and the championship.\
+
+<font size="1"><b>Table 2.</b> 2023 March Madness bracket. Note the four regions of teams seeded 1 through 16, as well as the "First Four" play-in games at the top.<br>Image courtesy New York Post.</font><br>
+![](images/Table2_Bracket.png){width=90%}\
+<br>
+
+Realistically, we'd expect the team with the lower seed to win every game they play, as they're the better team, and they do a great deal of the time: teams seeded from 1 to 8 had a record of 280-104 in every Round of 64 game since 2010, good for a win percentage of around 73% [7]. However, there are countless factors going into every game, such as coaching, preparedness, talent level, differing strength and weaknesses among the areas of the game, injuries, etc, to the point of where a 1 seed has lost to a 16 seed in the first round twice! Building upon the fact that we now know the bracket's structure and the general patterns of the sport, the difficulty of correctly predicting a bracket makes more sense now.
+
+For simplicity's sake, let's propose we know nothing about the sport. We know there are 63 games from the Round of 64 onward. (While the First Four would raise the count to 67 games, these play-in games are not used on bracket prediction software, so they are excluded from calculations and commentary herein.) Because we're effectively flipping a coin for who we're picking to win each game, the amount of combinations for filling in a bracket can be determined by multiplying the amount of possible outcomes (2) as many times as there are games (63). This can be simplified using exponents:
+
+```{r sciNot, include=FALSE}
+options(scipen=999)
+```
+
+```{r initialOdds}
+2^63
+```
+
+Therefore, the odds of randomly predicting a perfect bracket are 1 in 9223372036854775808, or over 9 quintillion. For reference, the height of 9 quintillion dollar bills stacked on top of each other is equivalent to the distance from the Earth to Pluto 60 times over [8]! According to Jeff Bergen, a mathematics professor at DePaul University, the odds don't get much better if we know further about basketball and the pairings in the tournament, such as the better-seeded team generally winning; he claimed in a 2012 YouTube video that the odds are still around 1 in 128 billion [9]. Therefore, for the purposes of realism, to remove the necessity of similar-yet-different data, and to hopefully remove some volatility that would arise in including teams facing different previous opponents or on hot streaks, *only the Round of 64 (32 of the 63 games) will be covered in this study*. Note that the odds of correctly picking the first round at random are similarly calculated and extremely rare, still in the billions:
+
+```{r r64Odds}
+2^32
+```
+
+Therefore, our goal is not to predict an entire bracket perfectly, let alone to predict the first round perfectly, but to predict the first round the best we can.<br><br>
+
+```{r sciNot0, include=FALSE}
+options(scipen=0)
+```
+
+<h4><b>3. DATA</b></h4>
+
+The data that will be used, as well as a ReadMe file that describes it in a more in-depth manner, can be found in the following GitHub repository:
+https://github.com/MombasaSt/MarchMadness
+
+A simple description is provided at the beginning of the ReadMe. It states:
+
+>The raw file *HistoryMMRaw.csv* in this depository lists numerous team, singular-opponent, season-opponent, and differential statistics for every team that has played in the Round of 64 of the NCAA Men's Division I College Basketball Tournament, colloquially known as "March Madness", from 2010 to 2022. Years prior are left out due to the tournament having a different format beforehand and missing advanced data for that time period, while 2023 is not included due to the recency of the data compared to the project's beginning.
+
+>All traditional and advanced statistics (from the leftmost column to "SOS_Diff") in the file are from Sports Reference - College Basketball, run by Sports Reference LLC; all adjusted statistics (from "AdjEM" to "NCSOSAdjEM_Diff") are from KenPom, run by Ken Pomeroy. The last column is the readily-available statistic of whether the team won their first round matchup or not.
+
+Please see the ReadMe and raw file to further understand the fields [7][11]. The links within are not necessary but are helpful.
+
+With that in mind, as the data has to be pulled from GitHub to begin any examination, we do that while making sure that any categorical field - that being the teams, seeds, and conferences, in this case - is made into a factor.
+
+```{r dataSetPrep, include=FALSE}
+# getting the raw file from GitHub, making categorical fields factors
+urlfile <- "https://raw.githubusercontent.com/MombasaSt/MarchMadness/main/HistoryMMRaw.csv"
+MM <- read_csv(url(urlfile), col_types = cols())
+MM$Team <- as.factor(MM$Team)
+MM$Team_R64Opp <- as.factor(MM$Team_R64Opp)
+MM$Seed <- as.factor(MM$Seed)
+MM$Seed_R64Opp <- as.factor(MM$Seed_R64Opp)
+MM$Conf <- as.factor(MM$Conf)
+MM$Conf_R64Opp <- as.factor(MM$Conf_R64Opp)
+MM$R64Res <- as.factor(MM$R64Res)
+```
+<br>
+
+<h4><b>4a. ANALYSIS - DISTRIBUTIONS</b></h4>
+
+With the data prepped and information gleaned, we can begin the analysis. First, viewing a distribution of each field in the data set allows us to see any relationships, trends, etc. However, because there are anywhere from 3 to 5 different field "types" (suffixes) for each statistic, we will view each suffix type on its own. We must also ignore categorical variables for these numerical distributions, so we will take those fields out before our viewing.
+
+```{r distribution_NoSuff, out.width="110%", echo=FALSE}
+# creating suffix df's
+MM_NoSuff <- MM[,c(7, 10, 13, 16, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 84, 89, 94, 99, 104, 109, 114, 119, 124, 129, 134, 139, 144, 149, 154, 157, 160, 163, 166, 169, 172, 175, 178, 181, 184)]
+MM_R64Opp <- MM[,c(8, 11, 14, 17, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 158, 161, 164, 167, 170, 173, 176, 179, 182, 184)]
+MM_SznOpp <- MM[,c(21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 151, 184)]
+MM_Diff_R64Opp <- MM[,c(9, 12, 15, 18, 22, 27, 32, 37, 42, 47, 52, 57, 62, 67, 72, 77, 82, 87, 92, 97, 102, 107, 112, 117, 122, 127, 132, 137, 142, 147, 152, 156, 159, 162, 165, 168, 171, 174, 177, 180, 183, 184)]
+MM_Diff_SznOpp <- MM[,c(23, 28, 33, 38, 43, 48, 53, 58, 63, 68, 73, 78, 83, 88, 93, 98, 103, 108, 113, 118, 123, 128, 133, 138, 143, 148, 153, 184)]
+
+# creating a view of the distributions, no suffix
+MM_NoSuff %>%
+  gather(-"R64Res", key = "var", value = "value") %>% 
+  ggplot(aes(x = value, color = R64Res)) +
+  geom_histogram(bins=18,alpha = 0.5,fill = "gray",position="dodge") +
+  facet_wrap(~ var, scales = "free") + 
+  labs(title = "Distributions of Continuous Predictors: No Suffix") + 
+  theme(axis.title.x=element_blank(),axis.title.y = element_blank(),
+        axis.text.x=element_blank(),axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) +
+  guides(color = guide_legend(title = "Result"))
+```
+
+When only viewing the distributions of the base statistics, a few trends immediately stand out. The main three adjusted statistics from KenPom and their strength of schedule counterparts (AdjEM, AdjO, AdjD, SOSAdjEM, SOSOppO, and SOSOppD, respectively) all have a clear shift in results between the better and worse teams on each graph. The same cannot be said for other statistics present.
+
+```{r distribution_R64Opp, out.width="110%", echo=FALSE}
+
+# creating a view of the distributions, R64 opponent
+MM_R64Opp %>%
+  gather(-"R64Res", key = "var", value = "value") %>% 
+  ggplot(aes(x = value, color = R64Res)) +
+  geom_histogram(bins=18,alpha = 0.5,fill = "gray",position="dodge") +
+  facet_wrap(~ var, scales = "free") + 
+  labs(title = "Distributions of Continuous Predictors: R64 Opponent") + 
+  theme(axis.title.x=element_blank(),axis.title.y = element_blank(),
+        axis.text.x=element_blank(),axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) +
+  guides(color = guide_legend(title = "Result"))
+
+# remove MM_R64Opp for memory purposes, remove _R64Opp fields
+rm(MM_R64Opp)
+MM <- MM[-c(8, 11, 14, 17, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 158, 161, 164, 167, 170, 173, 176, 179, 182)]
+```
+
+The Round of 64 opponents' statistics are helpful for determining the differential fields, but trends are not found among the data, especially that of which was not already found in the previous distribution list. Because of that, and because the Diff_R64Opp fields are derivative of this field anyway, these fields are not necessary, and we will remove them from the overarching data set entirely.
+
+```{r distribution_SznOpp, out.width="110%", echo=FALSE}
+
+# creating a view of the distributions, Szn opponents (stats allowed)
+MM_SznOpp %>%
+  gather(-"R64Res", key = "var", value = "value") %>% 
+  ggplot(aes(x = value, color = R64Res)) +
+  geom_histogram(bins=18,alpha = 0.5,fill = "gray",position="dodge") +
+  facet_wrap(~ var, scales = "free") + 
+  labs(title = "Distributions of Continuous Predictors: Season Opponents") + 
+  theme(axis.title.x=element_blank(),axis.title.y = element_blank(),
+        axis.text.x=element_blank(),axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) +
+  guides(color = guide_legend(title = "Result"))
+```
+
+While there are no obvious trends from the distributions among a team's seasonal opponents' statistics, there is a chance these could come up later; as explained in the ReadMe, these values are what each team allowed during the season, effectively making them defensive metrics. We will therefore not remove them from the overall data set.
+
+```{r distribution_Diff_R64Opp, out.width="110%", echo=FALSE}
+
+# creating a view of the distributions, difference between team & R64 opponent
+MM_Diff_R64Opp %>%
+  gather(-"R64Res", key = "var", value = "value") %>% 
+  ggplot(aes(x = value, color = R64Res)) +
+  geom_histogram(bins=35,alpha = 0.5,fill = "gray",position="dodge") +
+  facet_wrap(~ var, scales = "free") + 
+  labs(title = "Distributions of Continuous Predictors: Diff B/w Team & R64 Opponent") + 
+  theme(axis.title.x=element_blank(),axis.title.y = element_blank(),
+        axis.text.x=element_blank(),axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) +
+  guides(color = guide_legend(title = "Result"))
+```
+
+The downside of plotting a distribution of statistics where each team appears in the data set is that the data will effectively be symmetrical, as the inverse of each plotted point on the graph will appear; the upside is that trends still appear, seeming even stronger now, with the difference in a team's base statistic and their Round of 64 opponent's base statistic being a notable marker for success or failure for AdjEM, AdjO, AdjD, SOSAdjEM, SOSOppO, and SOSOppD. Note that these are the same base statistics that had an apparent shift earlier. While the separation for each of those six distributions are much more clear-cut between a winner or loser, some other differential statistics also feature a bit of a minor pattern.
+
+```{r distribution_Diff_SznOpp, out.width="110%", echo=FALSE}
+
+# creating a view of the distributions, difference between team & szn opponents
+MM_Diff_SznOpp %>%
+  gather(-"R64Res", key = "var", value = "value") %>% 
+  ggplot(aes(x = value, color = R64Res)) +
+  geom_histogram(bins=35,alpha = 0.5,fill = "gray",position="dodge") +
+  facet_wrap(~ var, scales = "free") + 
+  labs(title = "Distributions of Continuous Predictors: Diff B/w Team & Season Opponents") + 
+  theme(axis.title.x=element_blank(),axis.title.y = element_blank(),
+        axis.text.x=element_blank(),axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) +
+  guides(color = guide_legend(title = "Result"))
+```
+
+While there are again no clear shifts in results from left to right on any distribution here, there are still some minor patterns, and there is clearly more information to be gleaned from the difference between a team's statistics allowed throughout the season and their opponents'.
+
+Be advised that, throughout almost every chart we've seen so far, there were more losing teams on the worse side of the graph than winning teams. This may be expected, but we now have a foundation on which to continue building our analysis.<br><br>
+
+<h4><b>4b. ANALYSIS - BEST PREDICTOR(S) OVERALL</b></h4>
+
+While immediately taking a deep dive into trends and partitions of the data may be alluring, March Madness is one of the most popular items nationwide because of its attraction to the *casual* viewer. Most people don't want to calculate advanced statistics - or go searching for them - before making a decision on who to pick; after all, I know more than a few people that have made a bracket based on "chalk", the better-ranked team winning every game, let alone which team had the better jersey colors. Therefore, let's find which predictor stands out as the best standalone option.
+
+After perusing the data, we know that using every field is not necessary, as certain columns in the data set were much better at predicting a winner than others. Likewise, trying any type of data analysis with over a hundred predictors is usually not helpful; so, as denoted earlier, six KenPom metrics and their differential/suffix equivalents stand out as potential points of emphasis, with those six being AdjEM, AdjO, AdjD, SOSAdjEM, SOSOppO, and SOSOppD. (The code that has created this markdown file can be readily copied and modified by the user if there is an urge to look at how other statistics would look in a logistic regression; however, time and length restraints on this paper do not allow these to be fully shown as well. Suffice to say, there was no statistical significance comparatively.)
+
+For this analysis, we will create training and testing models, and because we are looking at a large number of predictors versus one target variable, we will use a logistic regression. We create the sets and attempt to look at all twelve statistics first.
+
+```{r logRegKP12, echo=FALSE}
+
+# setting the training and testing sets. There are 768 rows, so 384 to each set.
+set.seed(10000)
+testindex <- sample(c(1:768),384,replace=FALSE)
+MM_train <- MM[-testindex,]
+MM_test <- MM[testindex,]
+
+# creating the logistical model with all data points, show the results
+glm_fit <- MM_train %>%
+  glm(R64Res ~ AdjEM+AdjO+AdjD+SOSAdjEM+SOSOppO+SOSOppD+
+        AdjEM_Diff_R64Opp+AdjO_Diff_R64Opp+AdjD_Diff_R64Opp+
+        SOSAdjEM_Diff_R64Opp+SOSOppO_Diff_R64Opp+SOSOppD_Diff_R64Opp,data =.,family = "binomial")
+summary(glm_fit)$coefficients
+
+# p_hat_glm predicts with the test set based on the model's response to the train set
+# y_hat_glm boils it down to make it digestible
+p_hat_glm <- predict(glm_fit,MM_test,type="response")
+y_hat_glm <- factor(ifelse(p_hat_glm > .5,1,0),levels=c("0","1"))
+
+T <- table(MM_test$R64Res,y_hat_glm)
+
+# Metrics for Binary Classification
+T <- as.vector(T)
+
+# Accuracy is the percentage correctly predicted in test
+accuracy <- (T[1]+T[4])/(T[1]+T[2]+T[3]+T[4])
+
+# Sensitivity is the percentage of 1's (wins) that were actually a 1
+sensitivity <- T[4]/(T[3]+T[4])
+
+# Specificity is the percentage of 0's (losses) that were actually a 0         
+specificity <- T[1]/(T[1]+T[2])
+
+metric <- c("Accuracy","Sensitivity","Specificity")
+value <- c(accuracy,sensitivity,specificity)
+data.frame(Metric = metric,Value = round(value,3))
+
+```
+
+In these circumstances, accuracy is the percentage of correct predictions of win or loss by the test, sensitivity is the percentage of wins that were actually wins, and specificity is the percentage of losses that were actually losses. From the logistic regression table, combined with the table representing metrics for binary classification (MBC herein), our first regression was correctly predicting winners and losers around three-quarters of the time, predicting a loser easier than a winner. That may seem good, but considering that none of the p-values for any of the predictors in the model are at a point of statistical significance, let alone less than 0.1, we can continue to remove variables to get a more accurate model.
+
+Judging by said p-values, the predictors with the suffix of Diff_R64Opp all are lower than the base statistic equivalent; therefore, we try the same model without any of the latter.
+
+```{r logRegDiff, echo=FALSE}
+
+# creating the logistical model with all data points
+glm_fit <- MM_train %>%
+  glm(R64Res ~ AdjEM_Diff_R64Opp+AdjO_Diff_R64Opp+AdjD_Diff_R64Opp+
+        SOSAdjEM_Diff_R64Opp+SOSOppO_Diff_R64Opp+SOSOppD_Diff_R64Opp,data =.,family = "binomial")
+p_hat_glm <- predict(glm_fit,MM_test,type="response")
+y_hat_glm <- factor(ifelse(p_hat_glm > .5,1,0),levels=c("0","1"))
+summary(glm_fit)$coefficients
+
+T <- table(MM_test$R64Res,y_hat_glm)
+
+# Metrics for Binary Classification
+T <- as.vector(T)
+
+# Accuracy is the percentage correctly predicted in test
+accuracy <- (T[1]+T[4])/(T[1]+T[2]+T[3]+T[4])
+
+# Sensitivity is the percentage of 1's (wins) that were actually a 1
+sensitivity <- T[4]/(T[3]+T[4])
+
+# Specificity is the percentage of 0's (losses) that were actually a 0         
+specificity <- T[1]/(T[1]+T[2])
+
+metric <- c("Accuracy","Sensitivity","Specificity")
+value <- c(accuracy,sensitivity,specificity)
+data.frame(Metric = metric,Value = round(value,3))
+
+```
+
+While we are still predicting losers better than winners, everything is being predicted better across the board, albeit at only a slightly better rate. However, none of our predictors are statistically significant. The strength of schedule predictors have a notably higher p-value compared to the team's predictors, so we remove them and continue.
+
+```{r logRegEMODDiff, echo=FALSE}
+
+# creating the logistical model with all data points
+glm_fit <- MM_train %>%
+  glm(R64Res ~ AdjEM_Diff_R64Opp+AdjO_Diff_R64Opp+AdjD_Diff_R64Opp,data =.,family = "binomial")
+p_hat_glm <- predict(glm_fit,MM_test,type="response")
+y_hat_glm <- factor(ifelse(p_hat_glm > .5,1,0),levels=c("0","1"))
+summary(glm_fit)$coefficients
+
+T <- table(MM_test$R64Res,y_hat_glm)
+
+# Metrics for Binary Classification
+T <- as.vector(T)
+
+# Accuracy is the percentage correctly predicted in test
+accuracy <- (T[1]+T[4])/(T[1]+T[2]+T[3]+T[4])
+
+# Sensitivity is the percentage of 1's (wins) that were actually a 1
+sensitivity <- T[4]/(T[3]+T[4])
+
+# Specificity is the percentage of 0's (losses) that were actually a 0         
+specificity <- T[1]/(T[1]+T[2])
+
+metric <- c("Accuracy","Sensitivity","Specificity")
+value <- c(accuracy,sensitivity,specificity)
+data.frame(Metric = metric,Value = round(value,3))
+
+```
+
+Our metrics continue to get better as our p-values fall, but the predictors are still not at a level of statistical significance that we desire. Dropping the predictor with the lowest p-value is the usual route, but we know the context for these predictors: adjusted offensive efficiency and adjusted defensive efficiency create the overall adjusted efficiency margin (AdjEM = AdjO - AdjD). It is then better to separate the three into two models: one where AdjEM_Diff_R64Opp alone is determining the fit and another where AdjO_Diff_R64Opp and AdjD_Diff_R64Opp are combined.
+
+```{r logRegEMDiff, echo=FALSE}
+
+# creating the logistical model with all data points
+glm_fit <- MM_train %>%
+  glm(R64Res ~ AdjEM_Diff_R64Opp,data =.,family = "binomial")
+p_hat_glm <- predict(glm_fit,MM_test,type="response")
+y_hat_glm <- factor(ifelse(p_hat_glm > .5,1,0),levels=c("0","1"))
+summary(glm_fit)$coefficients
+
+T <- table(MM_test$R64Res,y_hat_glm)
+
+# Metrics for Binary Classification
+T <- as.vector(T)
+
+# Accuracy is the percentage correctly predicted in test
+accuracy <- (T[1]+T[4])/(T[1]+T[2]+T[3]+T[4])
+
+# Sensitivity is the percentage of 1's (wins) that were actually a 1
+sensitivity <- T[4]/(T[3]+T[4])
+
+# Specificity is the percentage of 0's (losses) that were actually a 0         
+specificity <- T[1]/(T[1]+T[2])
+
+metric <- c("Accuracy","Sensitivity","Specificity")
+value <- c(accuracy,sensitivity,specificity)
+data.frame(Metric = metric,Value = round(value,3))
+
+```
+
+```{r logRegODDiff, echo=FALSE}
+
+# creating the logistical model with all data points
+glm_fit <- MM_train %>%
+  glm(R64Res ~ AdjO_Diff_R64Opp+AdjD_Diff_R64Opp,data =.,family = "binomial")
+p_hat_glm <- predict(glm_fit,MM_test,type="response")
+y_hat_glm <- factor(ifelse(p_hat_glm > .5,1,0),levels=c("0","1"))
+summary(glm_fit)$coefficients
+
+T <- table(MM_test$R64Res,y_hat_glm)
+
+# Metrics for Binary Classification
+T <- as.vector(T)
+
+# Accuracy is the percentage correctly predicted in test
+accuracy <- (T[1]+T[4])/(T[1]+T[2]+T[3]+T[4])
+
+# Sensitivity is the percentage of 1's (wins) that were actually a 1
+sensitivity <- T[4]/(T[3]+T[4])
+
+# Specificity is the percentage of 0's (losses) that were actually a 0         
+specificity <- T[1]/(T[1]+T[2])
+
+metric <- c("Accuracy","Sensitivity","Specificity")
+value <- c(accuracy,sensitivity,specificity)
+data.frame(Metric = metric,Value = round(value,3))
+```
+
+While our metrics dipped about a percentage point across the board, each fit is statistically significant for the first time. As both of the models have output with almost the same metrics, and AdjO and AdjD allows the calculation of AdjEM, the difference in a team's AdjEM and their opponent's seems to be the best single predictor out of the bunch, correctly predicting the winner 73.6% of the time, the loser 79.7% of the time, and the overall outcome 76.6% of the time. This is not a large step up in terms of success or failure rate from our first logistical model, but the statistical significance coming from the p-values shows that it is trustworthy. Below is a graph for AdjEM alone in the logisitic regression model:
+
+```{r logRegEMDiffGraph, echo=FALSE}
+
+t <- MM_test$AdjEM_Diff_R64Opp      # inputs to the model predictions
+y <- 1/(1+exp(-0.08391)*exp(0.12794*t))   # probabilities
+MM_test$Result <- as.factor(ifelse(MM_test$R64Res == 1,"W","L")) # Labels
+MM_test$y <- y
+vis <- MM_test %>% ggplot()
+vis + geom_jitter(aes(AdjEM_Diff_R64Opp,y,col=Result),size = 3,width = .01,height = .02) +
+  geom_abline(slope = 0, intercept = .5,col = "red") +
+  scale_color_manual(values = c("Red", "Blue")) +
+  labs(title = "Logistic Regression with One Predictor: Difference in AdjEM b/w Team, R64 Opp",
+       subtitle = "Accuracy of 294/384 = 76.6%")
+
+```
+
+Similar to before, due to time and length constraints, utilizing other combinations of the twelve previously-used KenPom statistics cannot all be shown but yielded results that were not any better than the previous.
+
+A final note to remember: the seed determines how the samples for the training and testing data are randomly selected; therefore, changing it can be helpful in finding how much variability exists between the randomness present.<br><br>
+
+<h4><b>4b. ANALYSIS - COMMENTATOR-ISMS</b></h4>
+
+Being a sports fan lends itself to watching many televised games, and the more games I watch, the more commentators I experience. Whether the game is being broadcast by the best of the best or the worst of the worst, numerous phrases are repeated from commentator to commentator, either in basketball alone or in the sports world.
+
+The most common "commentator-isms", as we'll call them, that I've heard include:
+
+>"Defense wins championships."
+
+>"[Higher-seeded school] plays at one of the fastest paces in the nation, so watch out!"
+
+>"[Higher-seeded school] is one of the best three-point shooting teams in the nation, so watch out!"
+
+>"[Team X] has to win the rebound battle to win the game."
+
+Well, how well do these quotes hold up? Our first commentator-ism should be fairly easy to delve into, as we've already almost finished it. We're not trying to win a championship with this study, but the answer to whether defense alone wins a first round game is, simply put, "more often than not". Overall defense, if measuring by adjusted defense, is a decent metric alone, but not as good as mixing it with adjusted offense, or using the adjusted efficiency margin entirely:
+
+```{r logRegDDiff, echo=FALSE}
+
+# creating the logistical model with all data points
+glm_fit <- MM_train %>%
+  glm(R64Res ~ AdjD_Diff_R64Opp,data =.,family = "binomial")
+p_hat_glm <- predict(glm_fit,MM_test,type="response")
+y_hat_glm <- factor(ifelse(p_hat_glm > .5,1,0),levels=c("0","1"))
+summary(glm_fit)$coefficients
+
+T <- table(MM_test$R64Res,y_hat_glm)
+
+# Metrics for Binary Classification
+T <- as.vector(T)
+
+# Accuracy is the percentage correctly predicted in test
+accuracy <- (T[1]+T[4])/(T[1]+T[2]+T[3]+T[4])
+
+# Sensitivity is the percentage of 1's (wins) that were actually a 1
+sensitivity <- T[4]/(T[3]+T[4])
+
+# Specificity is the percentage of 0's (losses) that were actually a 0         
+specificity <- T[1]/(T[1]+T[2])
+
+metric <- c("Accuracy","Sensitivity","Specificity")
+value <- c(accuracy,sensitivity,specificity)
+data.frame(Metric = metric,Value = round(value,3))
+```
+
+I was curious about how defensive counting stats, such as blocks and steals, held up in a logistic regression. After some fumbling around, the best combination I could come up with for a model of these included the difference for steals per game, steal percentage, and the difference in blocks per game, and it's still not much to write home about:
+
+```{r logRegDefDiff, echo=FALSE}
+
+# creating the logistical model with all data points
+glm_fit <- MM_train %>%
+  glm(R64Res ~ SPG_Diff_R64Opp+STLp_Diff_R64Opp+
+        BPG_Diff_R64Opp,data =.,family = "binomial")
+p_hat_glm <- predict(glm_fit,MM_test,type="response")
+y_hat_glm <- factor(ifelse(p_hat_glm > .5,1,0),levels=c("0","1"))
+summary(glm_fit)$coefficients
+
+T <- table(MM_test$R64Res,y_hat_glm)
+
+# Metrics for Binary Classification
+T <- as.vector(T)
+
+# Accuracy is the percentage correctly predicted in test
+accuracy <- (T[1]+T[4])/(T[1]+T[2]+T[3]+T[4])
+
+# Sensitivity is the percentage of 1's (wins) that were actually a 1
+sensitivity <- T[4]/(T[3]+T[4])
+
+# Specificity is the percentage of 0's (losses) that were actually a 0         
+specificity <- T[1]/(T[1]+T[2])
+
+metric <- c("Accuracy","Sensitivity","Specificity")
+value <- c(accuracy,sensitivity,specificity)
+data.frame(Metric = metric,Value = round(value,3))
+```
+
+Again, this isn't any better than any overarching defensive metric, but it's interesting to see.
+
+The next few -isms should be fairly simple to wade through. We could continue to do logistic regressions here, but we know, both from our distributions and previous work, that our metrics won't get any better, regardless of what statistics we're comparing. For the purposes of this paper, a "higher-seeded school" will be a team seeded at 9 or higher; additionally, the winning team is colored blue, while the losing team is colored orange.
+
+When we throw a team's pace of play alongside their Round of 64 opponent's in Tableau and only include higher-seeded teams, there's not much to go off of:
+
+![](images/Table4_Pace.png){width=90%}\
+
+Likewise, plotting a team's three-point percentage vs. their Round of 64 opponent's doesn't show any trends among those teams either; in fact, higher-seeded teams that have shot three-pointers at a rate of 40% or better are 2-16 since 2010.
+
+![](images/Table5_Threes.png){width=90%}\
+
+Last for this area of the game, another -ism I've heard is that teams that play fast *and* shoot threes well tend to do better. However, that doesn't hold up either, as the graph is a splatter rather than a trend:
+
+![](images/Table6_PaceThrees.png){width=90%}\
+
+From graphs alone, we can see that employing a "pace and space" approach, or spreading out a defense by playing faster and shooting quicker, usually from the three-point line, hasn't necessarily spelled confidence in a first-round victory. (The graphs using a team's pace look about the same when using KenPom's adjusted tempo.)
+
+Lastly, we take a look at rebounding. Luckily, "winning the rebound battle" is pretty easy to define with the numbers we already have, as differential statistics have already been calculated. However, regardless of what metrics were used for a graph based on rebounding, no major trends appeared, regardless of conference or seed, as well. The only thing I noticed that was notable was when graphing a team's total rebounding percentage against their Round of 64 opponent's value:
+
+![](images/Table7_TRBp.png){width=90%}\
+
+A keen eye may notice a pretty large lack of orange circles in the top left quadrant of the graph. However, that's a point that we've already technically made. Recall our distribution graph of the different between the team and their Round of 64 opponent's total rebound percentage:
+
+```{r distribution_Diff_R64Opp_TRBp, out.width="110%", echo=FALSE}
+
+# creating a view of the distributions, difference between team & R64 opponent
+MM_Diff_R64Opp[,c(20,42)] %>%
+  gather(-"R64Res", key = "var", value = "value") %>% 
+  ggplot(aes(x = value, color = R64Res)) +
+  geom_histogram(bins=35,alpha = 0.5,fill = "gray",position="dodge") +
+  facet_wrap(~ var, scales = "free") + 
+  labs(title = "Distributions of Continuous Predictors: Diff B/w Team & R64 Opponent TRBp") + 
+  theme(axis.title.x=element_blank(),axis.title.y = element_blank(),
+        axis.text.x=element_blank(),axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) +
+  guides(color = guide_legend(title = "Result"))
+```
+
+A team with a better total rebounding percentage wins a bit more often than loses, which the top left quarter of our earlier graph represents. While that fact is good to know, that statistic is less reliable and less predictable than any of our KenPom statistics from earlier, like most of our -isms; a logistic regression clearly shows this in the metric output:
+
+```{r logRegTRBpDiff, echo=FALSE}
+
+# creating the logistical model with all data points
+glm_fit <- MM_train %>%
+  glm(R64Res ~ TRBp_Diff_R64Opp,data =.,family = "binomial")
+p_hat_glm <- predict(glm_fit,MM_test,type="response")
+y_hat_glm <- factor(ifelse(p_hat_glm > .5,1,0),levels=c("0","1"))
+summary(glm_fit)$coefficients
+
+T <- table(MM_test$R64Res,y_hat_glm)
+
+# Metrics for Binary Classification
+T <- as.vector(T)
+
+# Accuracy is the percentage correctly predicted in test
+accuracy <- (T[1]+T[4])/(T[1]+T[2]+T[3]+T[4])
+
+# Sensitivity is the percentage of 1's (wins) that were actually a 1
+sensitivity <- T[4]/(T[3]+T[4])
+
+# Specificity is the percentage of 0's (losses) that were actually a 0         
+specificity <- T[1]/(T[1]+T[2])
+
+metric <- c("Accuracy","Sensitivity","Specificity")
+value <- c(accuracy,sensitivity,specificity)
+data.frame(Metric = metric,Value = round(value,3))
+```
+
+While the previous statements may be fun for commentators to repeat on an annual basis, they don't hold much weight, especially compared to the overarching adjusted statistics we know of.<br><br>
+
+<h4><b>4c. ANALYSIS - CONFERENCES</b></h4>
+
+My aforementioned fandom of college sports has shone a bright light on how different conferences are treated. While the casual viewer may see a team's conference as simply how the team is divided by region, which is technically true, those divisions are also based on the quality of play within them. For instance, while the SEC (Southeastern Conference) is generally regarded as one of the greatest conferences in college sports, they play in the same region - the Southeastern United States - as the Sun Belt Conference, which is generally considered a "mid-major" conference, or all Division I basketball conferences except for the ACC, Big East, Big 10, Big 12, Pac-12, and SEC [12].
+
+Likewise, here is the record for all conferences in the Round of 64 since 2010, separated by conference type:
+
+```{r conf, echo=FALSE}
+
+# create and format conf table, print
+confRec <- subset(MM %>%
+  count(Conf, R64Res) %>%
+  pivot_wider(names_from = R64Res, values_from = n), select=c(1,3,2))
+confRec[is.na(confRec)] = 0
+colnames(confRec)[2] ="W"
+colnames(confRec)[3] ="L"
+confRec$R64WLP <- round(confRec$W/(confRec$W+confRec$L),digits=3)
+confRec$Type <- with(confRec, ifelse(confRec$Conf %in% 
+        c('ACC','B EAST', 'B10', 'B12', 'PAC12', 'SEC'),"High-Major", "Mid-Major"))
+
+print.data.frame(arrange(confRec,confRec$Type,desc(confRec$R64WLP)))
+
+```
+
+Note that, if not for the Missouri Valley Conference (MVC), the American Athletic Conference (AAC), and the West Coast Conference (WCC), all mid-major conferences would have a worse Round of 64 win-loss percentage than the high-major conferences, and they would all be sub-.500 as well. Additionally, each of those conferences are boosted by one to two powerhouse schools that usually perform much better than the rest in the tournament: Wichita State and Loyola-Chicago are responsible for 7 of the 12 MVC wins; Cincinnati and Houston are responsible for 7 of the 13 AAC wins; and Gonzaga, a perennial top seed, and St. Mary's (CA) are responsible for all 14 of the WCC wins. Additionally, none of the MVC or AAC teams mentioned are in that respective conference anymore, as of 2023.
+
+Also of note are the two conferences with 30+ Round of 64 games under their belt that are sitting under .500 since 2010: the Atlantic 10 and the Mountain West conferences. Always be mindful when selecting teams from these two conferences to win, especially the Mountain West; the latter has performed exceptionally poor as either a higher seed or when playing a high major.
+
+![](images/Table8_MWCTeamSeed.png){width=30%}\
+
+![](images/Table9_MWCOppConf.png){width=30%}\
+
+After some further investigation, here are the most common conference combinations in a first round game since 2010:
+
+![](images/Table11_ConfCombo.png){width=30%}\
+
+Out of these six top combinations, the only lopsided ones are Big East vs. Big South, which has been 6-0 in the Big East's favor -- unsurprisingly, as the Big South has not won a tournament game since 2010 -- and ACC vs. Big 10, where the Big 10 is 6-1 and has not lost to an ACC school since 2017.
+
+Suffice to say, if a team is in a high-major conference, they are generally going to perform better, with further stipulations for the Mountain West and Big 10.<br><br>
+
+<h4><b>4d. ANALYSIS - SEEDS</b></h4>
+
+We can use similar methods from the conference analysis to get a table of how each seed has performed in the first round:
+
+```{r seed, echo=FALSE}
+
+# create and format conf table, print
+seedRec <- subset(MM %>%
+  count(Seed, R64Res) %>%
+  pivot_wider(names_from = R64Res, values_from = n), select=c(1,3,2))
+seedRec[is.na(seedRec)] = 0
+colnames(seedRec)[2] ="W"
+colnames(seedRec)[3] ="L"
+seedRec$R64WLP <- round(seedRec$W/(seedRec$W+seedRec$L),digits=3)
+
+print.data.frame(seedRec)
+
+```
+
+From the outset, there are two items to notice: less importantly, the win-loss percentage and records are flipped, as a 1 seed always plays a 16 seed, a 2 seed always plays a 15 seed, etc. More importantly, and surprisingly, the Round of 64 win-loss percentage is not always decreasing as we go up in seed, as one would think; it's clear that the pattern ends from seeds 5 to 12, as while the 5 seed's win-loss percentage continues the downward pattern, the 6 vs. 11 seed games are almost split 50-50 as to which seed has won more, the 7 seed has won twice as many times as the 10 seed has and is more successful than any seed in the region of 5 to 8, and the 8 vs. 9 seed games are also close to being 50-50.
+
+Regardless, we look at 2 seeds to begin our trend-hunting. Beginning with our best overarching statistic, adjusted efficiency margin (AdjEM), and the 2 seed, we should really not worry about a 2 seed being upset unless their 15 seed opponent has an AdjEM of their own at 4 or above; in the 32 occasions where the 15 seed had an AdjEM below 4, only one team won, which was 2012 Norfolk State defeating Missouri. (If you noticed three major outlying losses among the victories in the top left of the logistic regression graph from earlier, one of them was this game.) The 2 seed's AdjEM is on the y-axis, while the 15 seed's value is on the x-axis.
+
+![](images/Table12_2SeedAdjEM.png){width=80%}\
+
+Another interesting trend found between 2 seeds and 15 seeds is that the pace at which each team plays comparatively can be clustered into four groups, as seen below: Cluster 1, the purple cluster, features eleven 2 seeds that played either a bit faster or at the same pace as their 15 seed opponent and never lost, while both teams were some of the fastest comparatively; Cluster 2, the green cluster, features ten 2 seeds that also played either a bit faster or at the same pace as their 15 seed and never lost, while both teams were some of the slowest comparatively; Cluster 3, the red cluster, where all six of the 2 seed losses have come from, where both teams were about middle of the road in pace; and Cluster 4, or the grey cluster, where 2015 Virginia lands due to their glacial play.
+
+![](images/Table13_2SeedPace.png){width=80%}\
+
+How do these clusters occur? The only possible thought I have in a basketball sense is that better teams that play faster or slower have a unique way that they play and are in control of said way, so these teams are generally going to be better at controlling that pace, as slow or fast as it may be; meanwhile, teams in the middle of the road may let the game get out of hand towards one pace or another.
+
+Moving on to 3 and 4 seeds, when looking at AdjEM once more, the 3 or 4 seed is 38-1 since 2010 when one of the following was true: they had an AdjEM of 25 or higher, their opponent had an AdjEM of six or lower, or both. (The one loss was 3 seed Iowa State in 2015 losing to UAB.) All sixteen other losses are from other cases, with the green box surrounding the 39 occassions in the former group:
+
+![](images/Table14_34SeedAdjEM.png){width=80%}\
+
+Attempting to scrounge up further trends among 3 and 4 seeds didn't turn up much, otherwise. It's perhaps notable that four of the seven losses by 3 seeds since 2010 have been by teams in the Big 12, but three of the four losses were in 2015 and 2016. I noticed a few interesting "reverse trends", so to speak, such as 4 seeds losing more often when they were a better free-throw shooting team than the 13 seed, but nothing truly stood out.
+
+We finally reach the teams seeded at the middle of the pack, which are those from 5 to 12. Interestingly enough, a pattern first seems to emerge with our friend AdjEm with the 7 and 8 seeds rather than the 5 or 6 seeds. Here are those graphs, respectively:
+
+![](images/Table15_78SeedAdjEM.png){width=80%}\
+
+![](images/Table16_56SeedAdjEM.png){width=80%}\
+
+As the graph exemplifies with the large purple box, 7 and 8 seeds with an AdjEM of 18 or greater are 28-7, while those with an AdjEM lower than that are 30-31; this isn't any sort of death knell, but it is notable. On the contrary, other than teams with an AdjEM generally winning more among 5 and 6 seeds, there doesn't seem to be a large takeaway there.
+
+A few intriguing figures show up when looking at other predictors. When mixing seeds with conferences, the only interesting pattern that rises is that Big 10 teams are 11-0 since 2010 as a 7 or 8 seeds; once again, no such pattern exists for 5 and 6 seeds. Also, 7 seeds that shot 35% or better on three-pointers for their respective seasons were 22-5; teams that shot worse than 35% were 10-11:
+
+![](images/Table17_7SeedThreePp.png){width=80%}\
+
+Sadly, there wasn't much else to find, as trying to wade into the predictors with 5 or 6 seeds did not turn up anything more unique than using AdjEM.
+
+You may have noticed that the 1 seed was ignored entirely during this section. Why I would like to delve deeper into how Virginia lost to UMBC in 2018 -- as well as how Purdue lost to Farleigh-Dickinson in 2023 -- I do not think there is a definitive answer, and the injury before the tournament of De'Andre Hunter, Virginia's arguably best defensive player and ACC Sixth Man of the Year award winner that year, impacted them greatly; likewise, Purdue shot uniquely terrible from the field during the game for a 1 seed. Each game deserves its own report as to how they resulted in the way they did but will not be covered here.
+
+<h4><b>5. CONCLUSION</b></h4>
+
+From all the comparisons, research, and modeling performed within this report, the key takeaway is simple: adjusted efficiency margin -- or more specifically, the difference between a team's AdjEM and their opponent's -- is the single best measure of success in the tournament. Additionally, there are a few overarching trends that can be helpful on a conference or seed basis:
+
+* High-major conferences perform better on average in the first round.
+
+    + Be wary of selecting the Mountain West when they're playing a team from a high-major conference and/or are a higher seed.
+    
+    + The Big 10 has only lost once to a first round ACC opponent; more importantly, the Big 10 has yet to lose since 2010 as a 7 or 8 seed.
+
+* AdjEM matters greatly based on seeds.
+
+    + 1 seeds should always be selected, as there are not enough losing 1 seeds to predict further.
+
+    + If a 2 seed is playing a 15 seed with an AdjEM greater than 4, be careful.
+    
+    + If a 3 or 4 seed has an AdjEM worse than 25 and their opponent's is better than 6, be extra careful.
+    
+    + 5 and 6 seed matchups should go off of either the better AdjEM or any necessary conference predictor.
+    
+    + If a 7 or 8 seed has an AdjEM of 18 or better, their historical odds have been much better.
+    
+With all that in mind, the point of this research was to better predict a bracket. With the 2023 tournament complete by this report's completion, we can see how our observations would perform.
+
+First, selecting the team with the better adjusted efficiency margin will show us what our initial predictions are. Below is what that bracket looks like, and similar to our colors before, a success - a correct prediction - is in blue, while a failure - an incorrect prediction, where the other team won their game - is in orange:
+
+![](images/Table18_BracketP1.png){width=90%}\
+
+Getting 24/32 for our predictions isn't bad -- it's better than my first round last year, 22/32 -- and especially in a year that had a first round loss of a 1 seed, but when we look closer at the games where our first prediction was orange, a major takeaway is immediate: 5 out of the 8 "orange" predictions match the criteria for something to look out for among conferences and seeds.
+
+* More people predicted 2 seed Arizona to win the championship in 2023 (4.73%) than picked 15 seed Princeton to defeat Arizona in the first round (4.13%), but the game was actually one to watch out for [10]. Our criteria for 2 seeds is to be careful if their opponent had an AdjEM greater than 4; Princeton's was 8.04 in 2023.
+
+* Virginia being the first 1 seed to lose back in 2018 may have caused a lot of unfavorable bias in general basketball circles, but their loss to 13 seed Furman matches our criteria for 3 and 4 seeds: Virginia's AdjEM was less than 25 (16.37), and Furman's was greater than 6 (8.01).
+
+* Not only did 10 seed Boise State possibly defeating 7 seed Northwestern fail the criteria of a Mountain West school generally failing against a school in a high-major conference like the Big 10, but the latter conference continued their streak of not losing as a 7 seed. (7 seed Michigan State, a fellow Big 10 member, also won in a separate region.)
+
+* Likewise, 10 seed Utah State had a much higher AdjEm than 7 seed Missouri (17.59 compared to 13.07), but they also are another Mountain West School losing to a high-major school (SEC).
+
+* Finally, 7 seed Texas A&M had an AdjEM of 16.71, well under the recommended mark of 18 for our seed trends.
+
+Only the losses of 1 seed Purdue, 6 seed Iowa State, and 9 seed West Virginia are outside our perspective from this study. This is completely understandable, as our goal was not to be perfect, but to do the best we could.
+
+For some final thoughts, there are a few ideas that I would play around with if given more time. For starters, a few factors that are likely quantifiable include how the statistics of 1 seeds impact the distributions and odds, as those teams rarely lose anyway; my guess is that it would make every predictor a bit less accurate across the board. In addition, I'd like to see a geographical map of each team and how well they do in the first round. This may be too similar to how each conference does due to them being divided per region, but it could be a unique look at the data, anyway.
+
+A few difficult-to-quantify items, such as how an injury would impact a team, would be interesting to dive headfirst into. Hot and cold streaks would be an insightful look into whether a team entering the tournament with one could help or hurt them; while commentators like to butter up teams that come into March Madness with a winning streak, plenty of 1 seeds that go on to win the tournament didn't even win their own conference tournament.
+
+Regardless, thank you to the reader for the time spent researching with me. I hope this can be a helpful tool, both as a bracket predictor and as an insight into how best to view and modulate different statistics.
+
+<h4><b>5. REFERENCES</b></h4>
+
+1. Camenker, Jacob. “Why Is It Called March Madness & When Did It Start? The Story behind NCAA Tournament Origins | Sporting News.” Sporting News - NFL | NBA | MLB | NCAA | Boxing | Soccer | NASCAR, 16 Mar. 2021, https://www.sportingnews.com/us/ncaa-basketball/news/ncaa-tournament-why-its-called-march-madness-start/1eaonc5ckv33k194gbtnryc28s.
+2. Ruiz, Steven. “Villanova-UNC Was the Best NCAA Championship Game Ever | For The Win.” For The Win, For The Win, 5 Apr. 2016, https://ftw.usatoday.com/2016/04/villanova-unc-tops-the-list-of-the-10-best-ncaa-championship-games-ever.
+3. Nielsen. “March Madness NCAA Basketball TV Viewership 2019.” Statista, Apr. 2023, www.statista.com/statistics/251560/ncaa-basketball-march-madness-average-tv-viewership-per-game/.
+4. Ota, Kevin. “ESPN Tournament Challenge Sets New All-Time Record: 20 Million Brackets - ESPN Press Room U.S.” ESPN Press Room U.S., https://www.facebook.com/ESPN, 16 Mar. 2023, https://espnpressroom.com/us/press-releases/2023/03/espn-tournament-challenge-sets-new-all-time-record-20-million-brackets/#:~:text=ESPN%20Tournament%20Challenge%20Sets%20New%20All%2Dtime%20Record%3A%2020%20Million%20Brackets,-Kevin%20Ota%20Follow&text=The%20ESPN%20Men’s%20Tournament%20Challenge,most%20ever%20for%20the%20No.
+5. Huddleston, Tom. “Inside Warren Buffett’s Multimillion-Dollar March Madness Challenge.” CNBC, CNBC, 21 Mar. 2019, https://www.cnbc.com/2019/03/21/inside-warren-buffetts-multimillion-dollar-march-madness-challenge.html.
+7. “Men’s and Women’s College Basketball Statistics and History | College Basketball at Sports-Reference.Com.” College Basketball at Sports-Reference.Com, Sports Reference, https://www.sports-reference.com/cbb/. Accessed 11 Oct. 2023.
+8. Morse, Ben. “March Madness Bracket: The Astronomical Odds of Selecting a Perfect Bracket | CNN.” CNN, CNN, 13 Mar. 2023, https://www.cnn.com/2023/03/13/sport/march-madness-perfect-bracket-odds-spt-intl/index.html.
+9. DePaul University Marketing & Communications. Odds of a Perfect NCAA Basketball Bracket - DePaul Expert, Professor Jeff Bergen. YouTube, 29 Feb. 2012, https://www.youtube.com/watch?v=O6Smkv11Mj4.
+10. Becton, Stan. “Here’s How Many People Actually Picked Furman and Princeton in March Madness Brackets | NCAA.com.” Www.ncaa.com, 13 Mar. 2023, www.ncaa.com/news/basketball-men/article/2023-03-16/heres-how-many-people-actually-picked-furman-and-princeton-march-madness#:~:text=Princeton%20predictors. Accessed 19 Oct. 2023.
+11. Pomeroy, Ken. “Pomeroy College Basketball Ratings.” KenPom.Com, https://kenpom.com/. Accessed 11 Oct. 2023.
+12. Hartzler, Lance. “Let’s Talk about It: What Do We Consider a Mid Major? - Mid-Major Madness.” Mid-Major Madness, Mid-Major Madness, 6 Nov. 2022, https://www.midmajormadness.com/2022/11/6/23439653/fun-with-labels-whats-a-mid-major-in-college-basketball-really-i-dont-know.
