@@ -7,6 +7,13 @@ All traditional and advanced statistics (from the leftmost column to "Pace") in 
 Sports Reference - College Basketball: https://www.sports-reference.com/cbb/postseason/  
 KenPom: https://kenpom.com/
 
+## Directions
+
+In order to view the research paper with the images present in the R markdown file (which is the research paper itself):
+1) Download **MarchMadnessRP.Rmd** and **Images.zip**
+2) Extract the content of **Images.zip**
+3) Move the folder that was just extracted, named **Images**, to where it is in the same directory as **MarchMadnessRP.Rmd**
+
 ## Statistics: Suffixes
 
 Preceding this section are the definitions for each of the "base" columns/statistics present in the raw dataset. There are 4 suffixes, preceded by an underscore (_), that are also present; the reasoning for these suffixes are as follows, with examples below each using the first row:
