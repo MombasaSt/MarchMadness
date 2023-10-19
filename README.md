@@ -12,7 +12,9 @@ KenPom: https://kenpom.com/
 In order to view the research paper with the images present in the R markdown file (which is the research paper itself):
 1) Download **MarchMadnessRP.Rmd** and **Images.zip**
 2) Extract the content of **Images.zip**
-3) Move the folder that was just extracted, named **Images**, to where it is in the same directory as **MarchMadnessRP.Rmd**
+3) Move the folder that was just extracted, named **Images**, to where it is in the same directory as **MarchMadnessRP.Rmd**, such as this:
+   ![image](https://github.com/MombasaSt/MarchMadness/assets/51684045/2817bb54-c381-4af1-945c-57b109dbf80d)
+
 
 ## Statistics: Suffixes
 
