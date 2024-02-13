@@ -30,7 +30,7 @@ MATH 4404 Senior Project
 
 <h3><b>ABSTRACT</b></h3> </center>
 
-<font size="2">ABSTRACT GOES HERE</font><br><br>
+<font size="2">With yearly bracket entries totaling in the millions, the NCAA Men's College Basketball Tournament, also known as March Madness, has become renowned almost as much as the predictions associated with it compared to the actual games being played. This project seeks out potential trends when given traditional and advanced statistics for the teams involved in the postseason playoff from 2010-2022, from conference and seed to blocks and steals.</font><br><br>
 
 <h4><b>1. INTRODUCTION</b></h4>
 
